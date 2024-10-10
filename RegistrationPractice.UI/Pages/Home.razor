@@ -1,0 +1,21 @@
+﻿@page "/"
+@using RegistrationPractice.UI.Services.Http
+@inject IBackendApi BackendApi
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<MudButton OnClick="Logout">Logout</MudButton>
+
+@code{
+
+    private async void Logout()
+    {
+        await BackendApi.Logout();
+    }
+    
+
+}

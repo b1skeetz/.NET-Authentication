@@ -1,0 +1,12 @@
+﻿services:
+  registrationpractice:
+    image: registrationpractice
+    build:
+      context: .
+      dockerfile: RegistrationPractice/Dockerfile
+
+  registrationpractice.ui:
+    image: registrationpractice.ui
+    build:
+      context: .
+      dockerfile: RegistrationPractice.UI/Dockerfile

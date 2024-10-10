@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegistrationPractice.WebApi", "RegistrationPractice.WebApi\RegistrationPractice.WebApi.csproj", "{FBC7AEC1-AD81-4979-8649-B76A555069CB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{374B7B10-0A0D-4BC7-AC0E-3E15709FB95B}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegistrationPractice.DataAccess", "RegistrationPractice.DataAccess\RegistrationPractice.DataAccess.csproj", "{8902D9A6-CF2B-43C7-A4A0-5C7CD61CAC92}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegistrationPractice.Domain", "RegistrationPractice.Domain\RegistrationPractice.Domain.csproj", "{E0E08015-1E2A-458A-9A4D-6D67A556D0E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegistrationPractice.UI", "RegistrationPractice.UI\RegistrationPractice.UI.csproj", "{6F4177B9-BB38-4FDE-AFE8-D1833476B5E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegistrationPractice.WebApi.Contracts", "RegistrationPractice.WebApi.Contracts\RegistrationPractice.WebApi.Contracts.csproj", "{BA4D53B8-D6F3-4ADA-82A8-2C1F1ED7B29F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FBC7AEC1-AD81-4979-8649-B76A555069CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBC7AEC1-AD81-4979-8649-B76A555069CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBC7AEC1-AD81-4979-8649-B76A555069CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBC7AEC1-AD81-4979-8649-B76A555069CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8902D9A6-CF2B-43C7-A4A0-5C7CD61CAC92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8902D9A6-CF2B-43C7-A4A0-5C7CD61CAC92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8902D9A6-CF2B-43C7-A4A0-5C7CD61CAC92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8902D9A6-CF2B-43C7-A4A0-5C7CD61CAC92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0E08015-1E2A-458A-9A4D-6D67A556D0E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0E08015-1E2A-458A-9A4D-6D67A556D0E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0E08015-1E2A-458A-9A4D-6D67A556D0E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0E08015-1E2A-458A-9A4D-6D67A556D0E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F4177B9-BB38-4FDE-AFE8-D1833476B5E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F4177B9-BB38-4FDE-AFE8-D1833476B5E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F4177B9-BB38-4FDE-AFE8-D1833476B5E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F4177B9-BB38-4FDE-AFE8-D1833476B5E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA4D53B8-D6F3-4ADA-82A8-2C1F1ED7B29F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA4D53B8-D6F3-4ADA-82A8-2C1F1ED7B29F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA4D53B8-D6F3-4ADA-82A8-2C1F1ED7B29F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA4D53B8-D6F3-4ADA-82A8-2C1F1ED7B29F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
