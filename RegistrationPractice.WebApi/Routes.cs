@@ -32,10 +32,10 @@ public static class Routes
                     return Results.Unauthorized();
                 }
 
-                var claims = new List<Claim> { new Claim(ClaimTypes.Name, currentUser.Email) };
-                var claimsIdentity = new ClaimsIdentity(claims, "ApplicationCookie");
+                var claims = new List<Claim> { new (ClaimTypes.Name, currentUser.Email) };
+                var claimsIdentity = new ClaimsIdentity(claims, "Cookie");
                 await httpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-                return Results.Redirect(returnUrl??"/");
+                return Results.Ok(returnUrl);
             })
             .WithName("Login")
             .WithOpenApi();
@@ -43,11 +43,11 @@ public static class Routes
         apiGroup.MapGet("/logout", async (HttpContext httpContext) =>
         {
             await httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return Results.Redirect("/login");
+            return Results.Ok("/login");
         })
             .WithName("Logout")
             .WithOpenApi();
 
-        apiGroup.MapGet("/", [Authorize]() => "Hello World!");
+        apiGroup.MapGet("/home", [Authorize]() => "Hello World!");
     }
 }

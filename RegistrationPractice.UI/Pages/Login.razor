@@ -2,6 +2,7 @@
 @using RegistrationPractice.UI.Services.Http
 @using RegistrationPractice.WebApi.Contracts.Models
 @inject IBackendApi BackendApi
+@inject NavigationManager NavigationManager
 <h3>Login</h3>
 
 
@@ -35,6 +36,7 @@
 </MudContainer>
 
 @code {
+    private string _redirectUrl = string.Empty;
 
     UserModel _request = new()
     {
@@ -44,7 +46,9 @@
 
     private async Task Authenticate()
     {
-        await BackendApi.GetAuthenticated("/api/", _request);
+        _redirectUrl = await BackendApi.GetAuthenticated("/home", _request);
+        _redirectUrl = _redirectUrl.Replace("\"", "");
+        NavigationManager.NavigateTo(_redirectUrl);
     }
 
 }

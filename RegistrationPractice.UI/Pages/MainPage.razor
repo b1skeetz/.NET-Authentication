@@ -1,0 +1,23 @@
+﻿@page "/home"
+@using RegistrationPractice.UI.Services.Http
+@inject IBackendApi BackendApi
+@inject NavigationManager NavigationManager
+
+<PageTitle>MainPage</PageTitle>
+
+<h1>You are successfully authenticated</h1>
+
+<MudButton OnClick="Logout">Logout</MudButton>
+
+@code{
+    private string _returnUrl = string.Empty;
+
+    private async void Logout()
+    {
+        _returnUrl = await BackendApi.Logout();
+        _returnUrl = _returnUrl.Replace("\"", "");
+        NavigationManager.NavigateTo(_returnUrl);
+    }
+    
+
+}
