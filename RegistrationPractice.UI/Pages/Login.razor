@@ -1,8 +1,10 @@
 ﻿@page "/login"
+@using System.Text.Json
 @using RegistrationPractice.UI.Services.Http
 @using RegistrationPractice.WebApi.Contracts.Models
 @inject IBackendApi BackendApi
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JsRuntime
 <h3>Login</h3>
 
 
@@ -46,8 +48,13 @@
 
     private async Task Authenticate()
     {
-        _redirectUrl = await BackendApi.GetAuthenticated("/home", _request);
-        _redirectUrl = _redirectUrl.Replace("\"", "");
+        _redirectUrl = "/home";
+        //_redirectUrl = _redirectUrl.Replace("\"", "");
+        var response = await BackendApi.GetAuthenticated("/home", _request);
+        if (response.Token != "")
+        {
+            await JsRuntime.InvokeVoidAsync("localStorage.setItem", "user", JsonSerializer.Serialize(response));
+        }
         NavigationManager.NavigateTo(_redirectUrl);
     }
 

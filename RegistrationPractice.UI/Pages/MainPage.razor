@@ -1,7 +1,13 @@
 ﻿@page "/home"
+@using System.Net.Http.Headers
+@using System.Text.Json
+@using Microsoft.AspNetCore.Authorization
 @using RegistrationPractice.UI.Services.Http
+@using RegistrationPractice.WebApi.Contracts.Models
 @inject IBackendApi BackendApi
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JsRuntime
+@attribute [Authorize]
 
 <PageTitle>MainPage</PageTitle>
 
@@ -10,13 +16,16 @@
 <MudButton OnClick="Logout">Logout</MudButton>
 
 @code{
-    private string _returnUrl = string.Empty;
-
     private async void Logout()
     {
-        _returnUrl = await BackendApi.Logout();
-        _returnUrl = _returnUrl.Replace("\"", "");
-        NavigationManager.NavigateTo(_returnUrl);
+        var user = await JsRuntime.InvokeAsync<string>("localStorage.getItem", "user");
+        var authentication = JsonSerializer.Deserialize<AuthenticationResponse>(user);
+        if (authentication != null && authentication.UserName != "" && authentication.Token != "")
+        {
+            await JsRuntime!.InvokeVoidAsync("localStorage.removeItem", "user");
+        }
+        
+        NavigationManager.NavigateTo("/login");
     }
     
 
