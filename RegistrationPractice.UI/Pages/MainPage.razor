@@ -1,32 +1,55 @@
 ﻿@page "/home"
-@using System.Net.Http.Headers
 @using System.Text.Json
+@using Blazored.LocalStorage
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
 @using RegistrationPractice.UI.Services.Http
+@using RegistrationPractice.UI.Services.Security
 @using RegistrationPractice.WebApi.Contracts.Models
 @inject IBackendApi BackendApi
 @inject NavigationManager NavigationManager
-@inject IJSRuntime JsRuntime
+@inject AuthenticationStateProvider AuthenticationState
+@inject ILocalStorageService LocalStorage
 @attribute [Authorize]
 
 <PageTitle>MainPage</PageTitle>
+<CascadingAuthenticationState>
+    <AuthorizeView>
+        <Authorized>
+            <h1>You are successfully authenticated</h1>
 
-<h1>You are successfully authenticated</h1>
-
-<MudButton OnClick="Logout">Logout</MudButton>
+            <MudButton OnClick="Logout">Logout</MudButton>
+        </Authorized>
+        <NotAuthorized>
+            <MudText Style="font-size: 20pt">403 Forbidden</MudText>
+            <MudText Style="font-size: 20pt">You have to authenticate at first!</MudText>
+            <MudLink Href="/login">Login</MudLink>
+        </NotAuthorized>
+    </AuthorizeView>
+</CascadingAuthenticationState>
 
 @code{
+
+    protected override async Task OnInitializedAsync()
+    {
+        // var currentUser = await AuthenticationState.GetAuthenticationStateAsync();
+        // if (!currentUser.User.Identity.IsAuthenticated)
+        // {
+        //     NavigationManager.NavigateTo("/login");
+        // }
+    }
+
     private async void Logout()
     {
-        var user = await JsRuntime.InvokeAsync<string>("localStorage.getItem", "user");
+        var user = await LocalStorage.GetItemAsStringAsync("user");
         var authentication = JsonSerializer.Deserialize<AuthenticationResponse>(user);
         if (authentication != null && authentication.UserName != "" && authentication.Token != "")
         {
-            await JsRuntime!.InvokeVoidAsync("localStorage.removeItem", "user");
+            await LocalStorage.RemoveItemAsync("user");
         }
-        
+
         NavigationManager.NavigateTo("/login");
     }
-    
+
 
 }

@@ -36,7 +36,7 @@ namespace RegistrationPractice.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Role");
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("RegistrationPractice.Domain.User", b =>

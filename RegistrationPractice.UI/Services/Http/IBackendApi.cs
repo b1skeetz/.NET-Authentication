@@ -8,10 +8,12 @@ namespace RegistrationPractice.UI.Services.Http;
 public interface IBackendApi
 {
     [Post("/login")]
-    Task<AuthenticationResponse> GetAuthenticated(string? returnUrl, UserModel request, CancellationToken cancellationToken = default);
+    Task<ApiResponse<AuthenticationResponse>> GetAuthenticated(string? returnUrl,[Body] UserModel request, CancellationToken cancellationToken = default);
     
     [Get("/logout")]
     Task<string> Logout(CancellationToken cancellationToken = default);
     
+    [Post("/register")]
+    Task<ApiResponse<string>> Register([Body]UserModel request, CancellationToken cancellationToken = default);
     
 }
