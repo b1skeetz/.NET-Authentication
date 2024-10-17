@@ -13,6 +13,7 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddTransient<RefreshTokenHandler>();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, MyAuthenticationStateProvider>();
 
@@ -24,7 +25,7 @@ builder.Services.AddRefitClient<IBackendApi>()
     .ConfigureHttpClient(c =>
     {
         c.BaseAddress = backendApiEndpoint;
-    });
+    }).AddHttpMessageHandler<RefreshTokenHandler>();
 
 builder.Services.AddMudServices().AddMudBlazorScrollManager();
 

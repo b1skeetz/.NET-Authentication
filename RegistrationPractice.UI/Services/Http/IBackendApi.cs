@@ -16,4 +16,9 @@ public interface IBackendApi
     [Post("/register")]
     Task<ApiResponse<string>> Register([Body]UserModel request, CancellationToken cancellationToken = default);
     
+    [Post("/refresh-token")]
+    Task<ApiResponse<AuthenticationResponse>> RefreshToken([Body] RefreshTokenModel model, CancellationToken cancellationToken = default);
+    
+    [Post("/home")]
+    Task<ApiResponse<string>> GetHomeAsync(CancellationToken cancellationToken = default);
 }

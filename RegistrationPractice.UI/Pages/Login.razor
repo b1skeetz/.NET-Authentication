@@ -82,7 +82,7 @@
         }
         _isLoginPassed = true;
         StateHasChanged();
-        if (response.Content.Token != "")
+        if (response.Content.Token != "") // InternalServerError
         {
             await LocalStorage.SetItemAsync("user", response.Content);
         } 

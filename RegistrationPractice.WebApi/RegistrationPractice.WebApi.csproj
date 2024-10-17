@@ -30,6 +30,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\RegistrationPractice.DataAccess\RegistrationPractice.DataAccess.csproj" />
+      <ProjectReference Include="..\RegistrationPractice.UI\RegistrationPractice.UI.csproj" />
       <ProjectReference Include="..\RegistrationPractice.WebApi.Contracts\RegistrationPractice.WebApi.Contracts.csproj" />
     </ItemGroup>
 

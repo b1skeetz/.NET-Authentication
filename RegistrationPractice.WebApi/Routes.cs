@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
@@ -28,12 +29,13 @@ public static class Routes
                 {
                     return Results.BadRequest();
                 }
+
                 var currentUser = context.Users.FirstOrDefault(u => u.Email == request.Email
                                                                     && u.Password == request.Password);
                 if (currentUser is not null)
                 {
                     Results.Content($"Email {request.Email} is already in use.");
-                    return Results.Problem(detail: $"Email {request.Email} is already in use.", statusCode:500);
+                    return Results.Problem(detail: $"Email {request.Email} is already in use.", statusCode: 500);
                 }
 
                 context.Users.Add(new User
@@ -42,10 +44,11 @@ public static class Routes
                     Age = 1,
                     FirstName = "",
                     Password = request.Password,
-                    Role = await context.Roles.FirstAsync(x => x.RoleName == "User")
+                    Role = await context.Roles.FirstAsync(x => x.RoleName == "User"),
+                    RefreshToken = string.Empty
                 });
                 await context.SaveChangesAsync();
-                
+
                 return Results.Ok();
             })
             .WithName("Register")
@@ -60,6 +63,8 @@ public static class Routes
                 {
                     return Results.BadRequest();
                 }
+                
+                // InternalServerError
 
                 var currentUser = context.Users.FirstOrDefault(u => u.Email == request.Email
                                                                     && u.Password == request.Password);
@@ -68,31 +73,24 @@ public static class Routes
                     return Results.Unauthorized();
                 }
 
-                var claims = new List<Claim> { new(ClaimTypes.Name, currentUser.Email) };
-                var jwt = new JwtSecurityToken(
-                    issuer: AuthOptions.Issuer,
-                    audience: AuthOptions.Audience,
-                    claims: claims,
-                    expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(5)),
-                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(),
-                        SecurityAlgorithms.HmacSha256));
-
-
-                var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
                 // формируем ответ
                 var response = new AuthenticationResponse
                 {
                     UserName = request.Email,
-                    Token = encodedJwt
+                    Token = GenerateJwtToken(currentUser.Email),
+                    RefreshToken = GenerateRefreshToken()
                 };
+
+                currentUser.RefreshToken = response.RefreshToken;
+                currentUser.RefreshTokenExpiration = DateTimeOffset.UtcNow.AddHours(12);
+                await context.SaveChangesAsync();
 
                 //await JSRuntime!.InvokeVoidAsync("localStorage.setItem", "user", response);
                 return Results.Json(response);
             })
             .WithName("Login")
             .WithOpenApi();
-
+        
         apiGroup.MapGet("/logout", async () =>
             {
                 await JSRuntime!.InvokeVoidAsync("localStorage.removeItem", "user");
@@ -102,6 +100,32 @@ public static class Routes
             .WithOpenApi();
 
         apiGroup.MapPost("/home", () => "Hello World!").RequireAuthorization();
+    }
+    
+    private static string GenerateRefreshToken()
+    {
+        var randomNumber = new byte[64];
+
+        using (var numberGenerator = RandomNumberGenerator.Create())
+        {
+            numberGenerator.GetBytes(randomNumber);
+        }
+
+        return Convert.ToBase64String(randomNumber);
+    }
+
+    private static string GenerateJwtToken(string email)
+    {
+        var claims = new List<Claim> { new(ClaimTypes.Name, email) };
+        var jwt = new JwtSecurityToken(
+            issuer: AuthOptions.Issuer,
+            audience: AuthOptions.Audience,
+            claims: claims,
+            expires: DateTime.UtcNow.Add(TimeSpan.FromSeconds(30)),
+            signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(),
+                SecurityAlgorithms.HmacSha256));
+
+        return new JwtSecurityTokenHandler().WriteToken(jwt);
     }
 }
 

@@ -9,6 +9,8 @@ public class User
     public required string Password { get; set; }
     public required string FirstName { get; set; }
     public int Age { get; set; }
+    public required string RefreshToken { get; set; }
+    public DateTimeOffset RefreshTokenExpiration { get; set; }
     
     public long? RoleId { get; set; }
     [ForeignKey(nameof(RoleId))]

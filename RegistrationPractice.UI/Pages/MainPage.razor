@@ -32,11 +32,28 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // var currentUser = await AuthenticationState.GetAuthenticationStateAsync();
-        // if (!currentUser.User.Identity.IsAuthenticated)
-        // {
-        //     NavigationManager.NavigateTo("/login");
-        // }
+        await BackendApi.GetHomeAsync();
+        /*var currentUser = await AuthenticationState.GetAuthenticationStateAsync();
+        var user = await LocalStorage.GetItemAsStringAsync("user");
+        if (user is not null)
+        {
+            var authentication = JsonSerializer.Deserialize<AuthenticationResponse>(user);
+            if (!currentUser.User.Identity!.IsAuthenticated
+                && authentication != null
+                && authentication.UserName != ""
+                && authentication.Token != "")
+            {
+                await BackendApi.RefreshToken(new RefreshTokenModel
+                {
+                    JwtToken = authentication.Token,
+                    RefreshToken = authentication.RefreshToken
+                });
+            }
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/login");
+        }*/
     }
 
     private async void Logout()
