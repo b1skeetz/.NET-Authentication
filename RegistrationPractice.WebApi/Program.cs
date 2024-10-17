@@ -87,22 +87,17 @@ app.UseHttpsRedirection();
 
 app.MapPost("/refresh-token", async (
         ApplicationDbContext context,
-        [FromBody] RefreshTokenModel model) =>
+        [FromBody] string refreshToken) =>
     {
-        var principal = GetPrincipalFromToken(model.JwtToken!);
-        if (principal?.Identity.Name is null)
-        {
-            return Results.Problem(detail: "Invalid token", statusCode: 500);
-        }
-                
-        var currentUser = await context.Users.FirstAsync(x => x.Email == principal.Identity.Name);
+        var currentUser = await context.Users
+            .FirstOrDefaultAsync(x => x.RefreshToken == refreshToken
+                                      && x.RefreshTokenExpiration > DateTimeOffset.UtcNow);
 
-        if (!currentUser.RefreshToken.Equals(model.RefreshToken) ||
-            currentUser.RefreshTokenExpiration > DateTimeOffset.UtcNow)
+        if (currentUser == null)
         {
-            return Results.Redirect("/login");
+            return Results.Unauthorized();
         }
-                
+
         // формируем ответ
         var response = new AuthenticationResponse
         {
@@ -114,23 +109,9 @@ app.MapPost("/refresh-token", async (
         currentUser.RefreshToken = response.RefreshToken;
         currentUser.RefreshTokenExpiration = DateTimeOffset.UtcNow.AddHours(12);
         await context.SaveChangesAsync();
-        
-        return Results.Json(response);
-        
-        ClaimsPrincipal? GetPrincipalFromToken(string token)
-        {
-            var securityKey = AuthOptions.GetSymmetricSecurityKey();
 
-            var validation = new TokenValidationParameters
-            {
-                IssuerSigningKey = securityKey,
-                ValidateLifetime = true,
-                ValidateAudience = false,
-                ValidateIssuer = false
-            };
-            return new JwtSecurityTokenHandler().ValidateToken(token, validation, out _);
-        } 
-        
+        return Results.Json(response);
+
         string GenerateRefreshToken()
         {
             var randomNumber = new byte[64];
@@ -142,6 +123,7 @@ app.MapPost("/refresh-token", async (
 
             return Convert.ToBase64String(randomNumber);
         }
+
         string GenerateJwtToken(string email)
         {
             var claims = new List<Claim> { new(ClaimTypes.Name, email) };
@@ -157,8 +139,7 @@ app.MapPost("/refresh-token", async (
         }
     })
     .WithName("RefreshToken")
-    .WithOpenApi()
-    .RequireAuthorization();
+    .WithOpenApi();
 
 app.MapRoutes();
 

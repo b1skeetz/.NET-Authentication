@@ -77,11 +77,9 @@
         if (response.StatusCode == HttpStatusCode.Unauthorized)
         {
             _isLoginPassed = false;
-            StateHasChanged();
             return;
         }
         _isLoginPassed = true;
-        StateHasChanged();
         if (response.Content.Token != "") // InternalServerError
         {
             await LocalStorage.SetItemAsync("user", response.Content);

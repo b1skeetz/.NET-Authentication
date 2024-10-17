@@ -91,9 +91,9 @@ public static class Routes
             .WithName("Login")
             .WithOpenApi();
         
-        apiGroup.MapGet("/logout", async () =>
+        apiGroup.MapGet("/logout", () =>
             {
-                await JSRuntime!.InvokeVoidAsync("localStorage.removeItem", "user");
+                // Удалить рефреш токен с базы
                 return Results.Redirect("/login");
             })
             .WithName("Logout")
@@ -121,7 +121,7 @@ public static class Routes
             issuer: AuthOptions.Issuer,
             audience: AuthOptions.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.Add(TimeSpan.FromSeconds(30)),
+            expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(1)),
             signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(),
                 SecurityAlgorithms.HmacSha256));
 
